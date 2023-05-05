@@ -28,7 +28,15 @@ extends Node
 # Used for validation when converting strings to variants.
 var constructor_validation_strings: Array = [
 	"Vector2",
+	"Vector2i",
 	"Vector3",
+	"Vector3i",
+	"Vector4",
+	"Vector4i",
+	"Rect2",
+	"Rect2i",
+	"Plane",
+	"Quaternion",
 	"Color",
 	"int",
 	"float",
@@ -82,8 +90,32 @@ func stringify_variants(data: Variant) -> Variant:
 		TYPE_VECTOR2:
 			return "Vector2(%s, %s)" % [data.x, data.y]
 		
+		TYPE_VECTOR2I:
+			return "Vector2i(%s, %s)" % [data.x, data.y]
+		
 		TYPE_VECTOR3:
 			return "Vector3(%s, %s, %s)" % [data.x, data.y, data.z]
+		
+		TYPE_VECTOR3I:
+			return "Vector3i(%s, %s, %s)" % [data.x, data.y, data.z]
+		
+		TYPE_VECTOR4:
+			return "Vector4(%s, %s, %s, %s)" % [data.w, data.x, data.y, data.z]
+		
+		TYPE_VECTOR4I:
+			return "Vector4i(%s, %s, %s, %s)" % [data.w, data.x, data.y, data.z]
+		
+		TYPE_PLANE:
+			return "Plane(%s, %s, %s, %s)" % [data.normal.x, data.normal.y, data.normal.z, data.d]
+		
+		TYPE_QUATERNION:
+			return "Quaternion(%s, %s, %s, %s)" % [data.x, data.y, data.z, data.w]
+		
+		TYPE_RECT2:
+			return "Rect2(%s, %s, %s, %s)" % [data.position.x, data.position.y, data.size.x, data.size.y]
+		
+		TYPE_RECT2I:
+			return "Rect2i(%s, %s, %s, %s)" % [data.position.x, data.position.y, data.size.x, data.size.y]
 		
 		TYPE_COLOR:
 			return "Color(%s, %s, %s, %s)" % [data.r, data.g, data.b, data.a]

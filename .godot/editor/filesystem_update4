@@ -1,3 +1,6 @@
 res://Node2D.gd
 res://node_2d.tscn
 res://example.gd
+res://addons/gdvn/example.gd
+res://addons/gdvn/gdvn.gd
+res://addons/gdvn/example.json
