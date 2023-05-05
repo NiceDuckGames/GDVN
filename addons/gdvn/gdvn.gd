@@ -4,7 +4,7 @@ extends Node
 # Godot Variant Notation (GDVN)
 
 # GDVN is a notation written on top of JSON
-# the provides a consistent conversion between
+# that provides a consistent conversion between
 # Godot Variant types and JSON-supported types.
 #
 # To solve the problem of easy conversion, the format
