@@ -1,0 +1,2 @@
+# GDVN
+ Godot Variant Notation
