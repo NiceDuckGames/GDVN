@@ -1,31 +1,31 @@
 @tool
 extends Node
 
-# Godot Variant Notation (GDVN)
+## Godot Variant Notation (GDVN)
+##
+## GDVN is a notation written on top of JSON
+## that provides a consistent conversion between
+## Godot Variant types and JSON-supported types.
+##
+## To solve the problem of easy conversion, the format
+## converts Variants to strings by encoding them using
+## their constructor's syntax. For example:
+##
+##
+## var vec = Vector2(123, 456)
+## var as_string = GDVN.stringify(vec)
+## print(as_string)
+##
+## Output: "Vector2(123, 456)"
+##
+##
+## The strings are converted back into Variants
+## using Expressions, which are able to parse the
+## constructor of any Variant type.
 
-# GDVN is a notation written on top of JSON
-# that provides a consistent conversion between
-# Godot Variant types and JSON-supported types.
-#
-# To solve the problem of easy conversion, the format
-# converts Variants to strings by encoding them using
-# their constructor's syntax. For example:
-#
-#
-# var vec = Vector2(123, 456)
-# var as_string = GDVN.stringify(vec)
-# print(as_string)
-#
-# Output: "Vector2(123, 456)"
-#
-#
-# The strings are converted back into Variants
-# using Expressions, which are able to parse the
-# constructor of any Variant type.
 
-
-# List of supported Variant constructors
-# Used for validation when converting strings to variants.
+## List of supported Variant constructors
+## Used for validation when converting strings to variants.
 var constructor_validation_strings: Array = [
 	"Vector2",
 	"Vector2i",
@@ -44,6 +44,9 @@ var constructor_validation_strings: Array = [
 ]
 
 
+## Converts a Variant to a String represented
+## by the Variant's constructor syntax. If `data` is a 
+## Dictionary or Array, a JSON formatted String is returned.
 func stringify(data: Variant, indent: String = "    ", sort_keys: bool = false, full_precision: bool = false) -> String:
 	
 	var gdvn: Variant = stringify_variants(data)
@@ -54,11 +57,13 @@ func stringify(data: Variant, indent: String = "    ", sort_keys: bool = false, 
 	return gdvn
 
 
+## Converts a String encoded with `stringify()` back into
+## its equivalent Variant Type. 
 func parse_string(data: String) -> Variant:
 	
 	if data.begins_with("{") || data.begins_with("["):
 		
-		var json: Dictionary = JSON.parse_string(data)
+		var json: Variant = JSON.parse_string(data)
 		var gdvn: Variant = parse_variant_strings(json)
 		
 		return gdvn
@@ -70,7 +75,7 @@ func parse_string(data: String) -> Variant:
 		return gdvn
 
 
-# Recursively turn variants into strings representing their constructor syntax
+## Recursively turn variants into strings representing their constructor syntax
 func stringify_variants(data: Variant) -> Variant:
 	
 	match typeof(data):
@@ -146,7 +151,7 @@ func stringify_variants(data: Variant) -> Variant:
 			return str(data)
 
 
-# Recursively convert constructor syntax strings into variants
+## Recursively convert constructor syntax strings into variants
 func parse_variant_strings(data: Variant) -> Variant:
 	
 	match typeof(data):
@@ -182,7 +187,7 @@ func parse_variant_strings(data: Variant) -> Variant:
 			return data
 
 
-# Convert a single constructor syntax string into a variant
+## Convert a single constructor syntax string into a variant
 func string_to_variant(data: String) -> Variant:
 	
 	var splits = data.split("(")
