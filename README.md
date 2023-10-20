@@ -17,7 +17,7 @@ The encoded strings are then parsed back into Variants using Godot's Expression 
 
 # Usage
 
-The singleton is used exactly the same as Godot's built-in JSON class.
+GDVN is used exactly the same as Godot's built-in JSON class.
 
 #### `String stringify(data: Variant, indent: String = "    ", sort_keys: bool = false, full_precision: bool = false)`
 Converts `data` into a String formatted using the Variant's constructor syntax. If `data` is a Dictionary or Array, this is done recursively for every key:value pair or element, then the data is converted to a String in JSON format.
