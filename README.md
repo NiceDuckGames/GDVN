@@ -8,15 +8,26 @@ Godot Variants are formatted into Strings using their constructor syntax. For ex
 
 ```json
 {
-    "test_vector": "Vector2(123, 456)"
+    "test_vector": "Vector2(123, 456)",
+    "test_rect": "Rect2(0.0, 0.0, 0.0, 0.0)"
 }
 ```
-
-The encoded strings are then parsed back into Variants using Godot's Expression class, which is able to parse Variant constructors.
 
 # Usage
 
 GDVN is used exactly the same as Godot's built-in JSON class. (See: [JSON Class Reference](https://docs.godotengine.org/en/stable/classes/class_json.html))
+
+### `Error parse(gdvn_text: String, keep_text: bool)`
+Non-static alternative to `parse_string()`. Returns an Error that can be used for custom error handling. The resulting data can be retrieved from the `data` member variable.
+
+### `String get_error_message()`
+Returns the error message from the last failed `parse()` call.
+
+### `int get_error_line()`
+Returns the line where the error occurred in the text of the last `parse()` call.
+
+### `String get_parsed_text()`
+Returns the text that was parsed during the last `parse()` cal, if `keep_text` was true.
 
 #### `String stringify(data: Variant, indent: String = "    ", sort_keys: bool = false, full_precision: bool = false)`
 Converts `data` into a String formatted using the Variant's constructor syntax. If `data` is a Dictionary or Array, this is done recursively for every key:value pair or element, then the data is converted to a String in JSON format.
