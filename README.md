@@ -1,5 +1,4 @@
-# GDVN
- Godot Variant Notation
+# Godot Variant Notation
 
 GDVN is a notation built on top of JSON that handles encoding Godot Variant data types into parsable strings.
 
