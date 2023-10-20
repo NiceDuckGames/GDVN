@@ -3,8 +3,11 @@ extends EditorPlugin
 
 var gdvn_autoload_path: String = "res://addons/gdvn/gdvn.gd"
 
+var gdvn_singleton: GDVN
+
 func _enter_tree():
-	add_autoload_singleton("GDVN", gdvn_autoload_path)
+	gdvn_singleton = GDVN.new()
+	Engine.register_singleton("GDVN", gdvn_singleton)
 
 
 func _has_main_screen():
@@ -28,4 +31,4 @@ func _get_plugin_name():
 
 
 func _exit_tree():
-	remove_autoload_singleton("GDVN")
+	Engine.unregister_singleton("GDVN")
