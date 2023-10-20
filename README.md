@@ -1,3 +1,6 @@
+![image](https://github.com/NiceDuckGames/GDVN/assets/69459114/cd67821d-8b3a-409f-93ed-c3715a1e251d)
+
+
 # Godot Variant Notation
 
 GDVN is a notation built on top of JSON that handles encoding Godot Variant data types into parsable strings.
