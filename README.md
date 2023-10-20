@@ -38,17 +38,17 @@ Returns the line where the error occurred in the text of the last `parse()` call
 ### `String get_parsed_text()`
 Returns the text that was parsed during the last `parse()` cal, if `keep_text` was true.
 
-#### `String stringify(data: Variant, indent: String = "    ", sort_keys: bool = false, full_precision: bool = false)`
+#### `String stringify(data: Variant, indent: String = "    ", sort_keys: bool = false, full_precision: bool = false) static`
 Converts `data` into a String formatted using the Variant's constructor syntax. If `data` is a Dictionary or Array, this is done recursively for every key:value pair or element, then the data is converted to a String in JSON format.
 
-#### `Variant parse_string(data: String)`
+#### `Variant parse_string(data: String) static`
 Converts a String encoded with `stringify()` back into a Variant.
 
-#### `Variant stringify_variants(data: Variant)`
+#### `Variant stringify_variants(data: Variant) static`
 Converts a Variant into a String formatted using the Variant's constructor syntax. If `data` is a Dictionary or Array, this is done recursively for every key:value pair or element. Does not encode data into JSON format.
 
-#### `Variant parse_variant_strings(data: Variant)`
+#### `Variant parse_variant_strings(data: Variant) static`
 Converts a constructor syntax String back into a Variant. If `data` is a Dictionary or Array, this is done recursively for every key:value pair or element. Does not encode data into JSON format.
 
-#### `Variant string_to_variant(data: String)`
+#### `Variant string_to_variant(data: String) static`
 Converts a single constructor syntax String into a Variant.
