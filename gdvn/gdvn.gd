@@ -13,6 +13,7 @@ class_name GDVN
 ## converts Variants to strings by encoding them using
 ## their constructor's syntax. For example:
 ##
+##[codeblock]
 ##
 ## var vec = Vector2(123, 456)
 ## var as_string = GDVN.stringify(vec)
@@ -20,6 +21,7 @@ class_name GDVN
 ##
 ## Output: "Vector2(123, 456)"
 ##
+##[/codeblock]
 ##
 ## The strings are converted back into Variants
 ## using Expressions, which are able to parse the
@@ -45,9 +47,16 @@ static var constructor_validation_strings: Array = [
 	"bool"
 ]
 
+## Stores the result of a successful `parse()` call.
 var data: Variant
+
+## The original text from the last `parse()` call where `keep_text` was true.
 var parsed_text: String
+
+## The line in the text where the last `parse()` call failed.
 var error_line: int
+
+## The resulting error message from the last failed `parse()` call.
 var error_message: String
 
 
@@ -82,17 +91,17 @@ func parse(gdvn_text: String, keep_text: bool = false) -> Error:
 		return OK
 
 
-## Retrieve the error message from the last `parse()` call.
+## Retrieve the error message from the last failed `parse()` call.
 func get_error_message() -> String:
 	return error_message
 
 
-## Retrieve the error line from the last `parse()` call.
+## Retrieve the error line from the last failed `parse()` call.
 func get_error_line() -> int:
 	return error_line
 
 
-## Return the text that was parsed during the last `parse()` call
+## Retrieve the text that was parsed during the last `parse()` call,
 ## if `keep_text` was true.
 func get_parsed_text() -> String:
 	return parsed_text
@@ -112,7 +121,7 @@ static func stringify(variant_data: Variant, indent: String = "    ", sort_keys:
 
 
 ## Converts a String encoded with `stringify()` back into
-## its equivalent Variant Type. 
+## its equivalent Variant, and returns it.
 static func parse_string(gdvn_text: String) -> Variant:
 	
 	if gdvn_text.begins_with("{") || gdvn_text.begins_with("["):
@@ -129,83 +138,85 @@ static func parse_string(gdvn_text: String) -> Variant:
 		return gdvn
 
 
-## Recursively turn variants into strings representing their constructor syntax
-static func stringify_variants(gdvn_text: Variant) -> Variant:
+## Recursively turns variants into strings representing their constructor syntax,
+## but does not convert it to JSON format.
+static func stringify_variants(variant_data: Variant) -> Variant:
 	
-	match typeof(gdvn_text):
+	match typeof(variant_data):
 		
 		TYPE_STRING:
-			return gdvn_text
+			return variant_data
 		
 		TYPE_BOOL:
-			return "bool(%s)" % gdvn_text
+			return "bool(%s)" % variant_data
 		
 		TYPE_FLOAT:
-			return "float(%s)" % gdvn_text
+			return "float(%s)" % variant_data
 		
 		TYPE_INT:
-			return "int(%s)" % gdvn_text
+			return "int(%s)" % variant_data
 		
 		TYPE_VECTOR2:
-			return "Vector2(%s, %s)" % [gdvn_text.x, gdvn_text.y]
+			return "Vector2(%s, %s)" % [variant_data.x, variant_data.y]
 		
 		TYPE_VECTOR2I:
-			return "Vector2i(%s, %s)" % [gdvn_text.x, gdvn_text.y]
+			return "Vector2i(%s, %s)" % [variant_data.x, variant_data.y]
 		
 		TYPE_VECTOR3:
-			return "Vector3(%s, %s, %s)" % [gdvn_text.x, gdvn_text.y, gdvn_text.z]
+			return "Vector3(%s, %s, %s)" % [variant_data.x, variant_data.y, variant_data.z]
 		
 		TYPE_VECTOR3I:
-			return "Vector3i(%s, %s, %s)" % [gdvn_text.x, gdvn_text.y, gdvn_text.z]
+			return "Vector3i(%s, %s, %s)" % [variant_data.x, variant_data.y, variant_data.z]
 		
 		TYPE_VECTOR4:
-			return "Vector4(%s, %s, %s, %s)" % [gdvn_text.w, gdvn_text.x, gdvn_text.y, gdvn_text.z]
+			return "Vector4(%s, %s, %s, %s)" % [variant_data.w, variant_data.x, variant_data.y, variant_data.z]
 		
 		TYPE_VECTOR4I:
-			return "Vector4i(%s, %s, %s, %s)" % [gdvn_text.w, gdvn_text.x, gdvn_text.y, gdvn_text.z]
+			return "Vector4i(%s, %s, %s, %s)" % [variant_data.w, variant_data.x, variant_data.y, variant_data.z]
 		
 		TYPE_PLANE:
-			return "Plane(%s, %s, %s, %s)" % [gdvn_text.normal.x, gdvn_text.normal.y, gdvn_text.normal.z, gdvn_text.d]
+			return "Plane(%s, %s, %s, %s)" % [variant_data.normal.x, variant_data.normal.y, variant_data.normal.z, variant_data.d]
 		
 		TYPE_QUATERNION:
-			return "Quaternion(%s, %s, %s, %s)" % [gdvn_text.x, gdvn_text.y, gdvn_text.z, gdvn_text.w]
+			return "Quaternion(%s, %s, %s, %s)" % [variant_data.x, variant_data.y, variant_data.z, variant_data.w]
 		
 		TYPE_RECT2:
-			return "Rect2(%s, %s, %s, %s)" % [gdvn_text.position.x, gdvn_text.position.y, gdvn_text.size.x, gdvn_text.size.y]
+			return "Rect2(%s, %s, %s, %s)" % [variant_data.position.x, variant_data.position.y, variant_data.size.x, variant_data.size.y]
 		
 		TYPE_RECT2I:
-			return "Rect2i(%s, %s, %s, %s)" % [gdvn_text.position.x, gdvn_text.position.y, gdvn_text.size.x, gdvn_text.size.y]
+			return "Rect2i(%s, %s, %s, %s)" % [variant_data.position.x, variant_data.position.y, variant_data.size.x, variant_data.size.y]
 		
 		TYPE_COLOR:
-			return "Color(%s, %s, %s, %s)" % [gdvn_text.r, gdvn_text.g, gdvn_text.b, gdvn_text.a]
+			return "Color(%s, %s, %s, %s)" % [variant_data.r, variant_data.g, variant_data.b, variant_data.a]
 		
 		TYPE_DICTIONARY:
 			
 			# Convert all the keys
 			var new_keys: Dictionary = {}
 			
-			for key in gdvn_text.keys():
-				new_keys[stringify_variants(key)] = gdvn_text[key]
-				gdvn_text.erase(key)
+			for key in variant_data.keys():
+				new_keys[stringify_variants(key)] = variant_data[key]
+				variant_data.erase(key)
 			
-			gdvn_text.merge(new_keys)
+			variant_data.merge(new_keys)
 			
 			# Then convert the values
-			for k in gdvn_text:
-				gdvn_text[k] = stringify_variants(gdvn_text[k])
+			for k in variant_data:
+				variant_data[k] = stringify_variants(variant_data[k])
 				
-			return gdvn_text
+			return str(variant_data)
 		
 		TYPE_ARRAY:
-			for i in gdvn_text.size():
-				gdvn_text[i] = stringify_variants(gdvn_text[i])
-			return gdvn_text
+			for i in variant_data.size():
+				variant_data[i] = stringify_variants(variant_data[i])
+			return str(variant_data)
 	
 		_:
-			return str(gdvn_text)
+			return str(variant_data)
 
 
-## Recursively convert constructor syntax strings into variants
+## Convert constructor syntax strings into variants. Recursively
+## converts all array elements and dictionary keys/values.
 static func parse_variant_strings(variant_data: Variant) -> Variant:
 	
 	match typeof(variant_data):

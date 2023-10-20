@@ -46,4 +46,33 @@ func import():
 	
 	fa.close()
 	
+
+func static_example():
 	
+	var gdvn_string: String = GDVN.stringify(data)
+	print(gdvn_string)
+	
+	var gdvn_data: Variant = GDVN.parse_string(gdvn_string)
+	print(gdvn_data)
+
+
+func instance_example():
+	
+	var gdvn_string: String = GDVN.stringify(data)
+	
+	var gdvn: GDVN = GDVN.new()
+	var err: Error = gdvn.parse(gdvn_string, true)
+	
+	if err == OK:
+		
+		var original_text: String = gdvn.get_parsed_text()
+		var parsed_data: Variant = gdvn.data
+		
+		print("Success!: " + str(parsed_data))
+	
+	else:
+		
+		var error_message: String = gdvn.get_error_message()
+		var error_line: int = gdvn.get_error_line()
+		
+		print("Fail: " + error_message + " at line" + str(error_line))
