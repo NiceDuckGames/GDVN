@@ -16,6 +16,7 @@ Godot Variants are formatted into Strings using their constructor syntax. For ex
 # Usage
 
 GDVN is used exactly the same as Godot's built-in JSON class. (See: [JSON Class Reference](https://docs.godotengine.org/en/stable/classes/class_json.html))
+
 An [example script](https://github.com/NiceDuckGames/GDVN/blob/main/gdvn/example.gd) is provided that demonstrates usage of the plugin.
 
 ### `Error parse(gdvn_text: String, keep_text: bool)`
