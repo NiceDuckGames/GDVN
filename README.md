@@ -24,7 +24,7 @@ GDVN is used exactly the same as Godot's built-in JSON class. (See: [JSON Class 
 
 An [example script](https://github.com/NiceDuckGames/GDVN/blob/main/gdvn/example.gd) is provided that demonstrates usage of the plugin.
 
-# Docs
+# Quick Docs
 
 ### `Error parse(gdvn_text: String, keep_text: bool)`
 Non-static alternative to `parse_string()`. Returns an Error that can be used for custom error handling. The resulting data can be retrieved from the `data` member variable.
