@@ -12,7 +12,7 @@ Godot Variants are formatted into Strings using their constructor syntax. For ex
 ```json
 {
     "test_vector": "Vector2(123, 456)",
-    "test_rect": "Rect2(0.0, 0.0, 0.0, 0.0)"
+    "Rect2(0.0, 0.0, 0.0, 0.0)" : "test_rect" 
 }
 ```
 
@@ -24,6 +24,10 @@ GDVN is used exactly the same as Godot's built-in JSON class. (See: [JSON Class 
 
 An [example script](https://github.com/NiceDuckGames/GDVN/blob/main/gdvn/example.gd) is provided that demonstrates usage of the plugin.
 
+
+<br>
+<br>
+  
 # Quick Docs
 
 ### `Error parse(gdvn_text: String, keep_text: bool)`
