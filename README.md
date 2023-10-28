@@ -1,4 +1,4 @@
-![image](https://github.com/NiceDuckGames/GDVN/assets/69459114/cd67821d-8b3a-409f-93ed-c3715a1e251d)
+![image](https://github.com/NiceDuckGames/GDVN/blob/main/GDVNIcon.png)
 
 
 # Godot Variant Notation
@@ -31,7 +31,7 @@ Switching from using JSON to using GDVN is as easy as changing the `JSON` class 
 
 
 <br>
-<br>
+
   
 # Quick Docs
 
@@ -59,7 +59,7 @@ Converts a String encoded with `stringify()` back into a Variant.
 Converts a Variant into a String formatted using the Variant's constructor syntax. If `data` is a Dictionary or Array, this is done recursively for every key:value pair or element. Does not encode data into JSON format.
 
 #### `Variant parse_variant_strings(data: Variant) static`
-Converts a constructor syntax String back into a Variant. If `data` is a Dictionary or Array, this is done recursively for every key:value pair or element. Does not encode data into JSON format.
+Converts a constructor syntax String back into a Variant. If a Dictionary or Array is provided, the elements of the Dictionary or Array are converted and the structure is returned.
 
 #### `Variant string_to_variant(data: String) static`
 Converts a single constructor syntax String into a Variant.
