@@ -115,7 +115,7 @@ static func stringify(variant_data: Variant, indent: String = "    ", sort_keys:
 	var gdvn: Variant = stringify_variants(variant_data)
 	
 	if gdvn is Dictionary || gdvn is Array:
-		return JSON.stringify(variant_data, indent, sort_keys, full_precision)
+		return JSON.stringify(gdvn, indent, sort_keys, full_precision)
 	
 	return gdvn
 
@@ -207,7 +207,7 @@ static func stringify_variants(variant_data: Variant) -> Variant:
 			for k in new_data:
 				new_data[k] = stringify_variants(new_data[k])
 				
-			return str(new_data)
+			return new_data
 		
 		TYPE_ARRAY:
 			
@@ -220,10 +220,10 @@ static func stringify_variants(variant_data: Variant) -> Variant:
 			for i in new_data.size():
 				new_data[i] = stringify_variants(new_data[i])
 			
-			return str(new_data)
+			return new_data
 	
 		_:
-			return str(variant_data)
+			return variant_data
 
 
 ## Convert constructor syntax strings into variants. Recursively
