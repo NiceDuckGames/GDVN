@@ -1,5 +1,5 @@
 @tool
-extends Node
+extends Resource
 
 class_name GDVN
 
@@ -63,7 +63,7 @@ var error_message: String
 ## Non-static alternative to `parse_string()`. Returns an Error
 ## that can be used for custom error handling. The resulting data
 ## can be retrieved from the `data` member variable.
-func parse(gdvn_text: String, keep_text: bool = false) -> Error:
+func parse(gdvn_text: String, keep_text: bool = false, typed_arrays: bool = false) -> Error:
 	
 	if keep_text: parsed_text = gdvn_text
 	
@@ -78,7 +78,7 @@ func parse(gdvn_text: String, keep_text: bool = false) -> Error:
 		if err == OK:
 			
 			var json_data: Variant = json.data
-			data = parse_variant_strings(json_data)
+			data = parse_variant_strings(json_data, typed_arrays)
 			
 			return err
 		
@@ -86,7 +86,7 @@ func parse(gdvn_text: String, keep_text: bool = false) -> Error:
 	
 	else:
 		
-		data = parse_variant_strings(gdvn_text)
+		data = parse_variant_strings(gdvn_text, typed_arrays)
 		
 		return OK
 
@@ -121,19 +121,20 @@ static func stringify(variant_data: Variant, indent: String = "    ", sort_keys:
 
 
 ## Converts a String encoded with `stringify()` back into
-## its equivalent Variant, and returns it.
-static func parse_string(gdvn_text: String) -> Variant:
+## its equivalent Variant, and returns it. If `typed_arrays` is
+## true, arrays of like-typed values will be returned as TypedArrays.
+static func parse_string(gdvn_text: String, typed_arrays: bool = false) -> Variant:
 	
 	if gdvn_text.begins_with("{") || gdvn_text.begins_with("["):
 		
 		var json: Variant = JSON.parse_string(gdvn_text)
-		var gdvn: Variant = parse_variant_strings(json)
+		var gdvn: Variant = parse_variant_strings(json, typed_arrays)
 		
 		return gdvn
 	
 	else:
 		
-		var gdvn: Variant = parse_variant_strings(gdvn_text)
+		var gdvn: Variant = parse_variant_strings(gdvn_text, typed_arrays)
 		
 		return gdvn
 
@@ -191,33 +192,44 @@ static func stringify_variants(variant_data: Variant) -> Variant:
 		
 		TYPE_DICTIONARY:
 			
+			var new_data: Dictionary = variant_data.duplicate(true)
+			
 			# Convert all the keys
 			var new_keys: Dictionary = {}
 			
-			for key in variant_data.keys():
-				new_keys[stringify_variants(key)] = variant_data[key]
-				variant_data.erase(key)
+			for key in new_data.keys():
+				new_keys[stringify_variants(key)] = new_data[key]
+				new_data.erase(key)
 			
-			variant_data.merge(new_keys)
+			new_data.merge(new_keys)
 			
 			# Then convert the values
-			for k in variant_data:
-				variant_data[k] = stringify_variants(variant_data[k])
+			for k in new_data:
+				new_data[k] = stringify_variants(new_data[k])
 				
-			return str(variant_data)
+			return str(new_data)
 		
 		TYPE_ARRAY:
-			for i in variant_data.size():
-				variant_data[i] = stringify_variants(variant_data[i])
-			return str(variant_data)
+			
+			var new_data: Array = variant_data.duplicate(true)
+			
+			# If the array is typed, create a new un-typed version
+			if new_data.get_typed_builtin() != TYPE_NIL:
+				new_data = Array(new_data, TYPE_NIL, "", null)
+			
+			for i in new_data.size():
+				new_data[i] = stringify_variants(new_data[i])
+			
+			return str(new_data)
 	
 		_:
 			return str(variant_data)
 
 
 ## Convert constructor syntax strings into variants. Recursively
-## converts all array elements and dictionary keys/values.
-static func parse_variant_strings(variant_data: Variant) -> Variant:
+## converts all array elements and dictionary keys/values. If `typed_arrays`
+## is true, an array of like-typed values will be returned as a TypedArray.
+static func parse_variant_strings(variant_data: Variant, typed_arrays: bool = false) -> Variant:
 	
 	match typeof(variant_data):
 		
@@ -227,26 +239,41 @@ static func parse_variant_strings(variant_data: Variant) -> Variant:
 		
 		TYPE_DICTIONARY:
 			
+			var new_data: Dictionary = variant_data.duplicate(true)
+			
 			# Convert all the keys
 			var new_keys: Dictionary = {}
 			
-			for key in variant_data.keys():
-				new_keys[parse_variant_strings(key)] = variant_data[key]
-				variant_data.erase(key)
+			for key in new_data.keys():
+				new_keys[parse_variant_strings(key, typed_arrays)] = new_data[key]
+				new_data.erase(key)
 			
-			variant_data.merge(new_keys)
+			new_data.merge(new_keys)
 			
 			# Then convert the values
-			for k in variant_data:
-				variant_data[k] = parse_variant_strings(variant_data[k])
+			for k in new_data:
+				new_data[k] = parse_variant_strings(new_data[k], typed_arrays)
 			
-			return variant_data
+			return new_data
 		
 		TYPE_ARRAY:
 			
-			for i in variant_data.size():
-				variant_data[i] = parse_variant_strings(variant_data[i])
-			return variant_data
+			var new_data: Array = variant_data.duplicate(true)
+			
+			for i in new_data.size():
+				new_data[i] = parse_variant_strings(new_data[i], typed_arrays)
+			
+			if typed_arrays:
+			
+				var element_type: int = typeof(new_data[0])
+				var type_check: Callable = func(element): return typeof(element) == element_type 
+				
+				# Check if all elements are of the same type.
+				# If they are, create a new builtin typed array.
+				if new_data.all(type_check):
+					new_data = Array(new_data, element_type, "", null)
+			
+			return new_data
 		
 		_:
 			return variant_data
@@ -255,13 +282,13 @@ static func parse_variant_strings(variant_data: Variant) -> Variant:
 ## Convert a single constructor syntax string into a variant
 static func string_to_variant(gdvn_text: String) -> Variant:
 	
-	var splits = gdvn_text.split("(")
+	var splits: PackedStringArray = gdvn_text.split("(")
 	
 	# Do some validation to confirm the correct constructor syntax
 	if splits.size() == 2 && splits[1].ends_with(")") && constructor_validation_strings.has(splits[0]):
 		
 		var exp: Expression = Expression.new()
-		var err = exp.parse(gdvn_text)
+		var err: Error = exp.parse(gdvn_text)
 		
 		if err != OK:
 			return gdvn_text
