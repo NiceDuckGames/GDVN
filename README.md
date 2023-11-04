@@ -22,7 +22,7 @@ This keeps the data readable, and is easily parsable by the engine using the Exp
 
 GDVN is used exactly the same as Godot's built-in JSON class. (See: [JSON Class Reference](https://docs.godotengine.org/en/stable/classes/class_json.html))
 
-An [example script](https://github.com/NiceDuckGames/GDVN/blob/main/gdvn/example.gd) is provided that demonstrates usage of the plugin.
+An [example script](https://github.com/NiceDuckGames/GDVN/blob/main/addons/gdvn/example.gd) is provided that demonstrates usage of the plugin.
 
 The `stringify()` function will convert any Variant type into an equivalent GDVN String, and the `parse()` and `parse_string()` functions will parse a GDVN String into its equivalent Variant.
 GDVN Strings produced by `stringify()` are also valid JSON strings. See Godot's JSON docs for more detailed usage documentation.
